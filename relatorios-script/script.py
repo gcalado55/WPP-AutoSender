@@ -6,35 +6,38 @@ import json
 import logging
 import os
 
-# Configurações de Log
-# Configura o sistema de logging para registrar mensagens em um arquivo de log.
+# Configuração do logging para registrar eventos em um arquivo
 logging.basicConfig(filename='envio_whatsapp.log', level=logging.INFO, 
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
-# Função para carregar as configurações de um arquivo JSON
 def carregar_configuracao(arquivo):
-    # Verifica se o arquivo existe
+    #Carrega as configurações do arquivo JSON especificado.
     if not os.path.exists(arquivo):
         logging.error("Arquivo de configuração não encontrado.")
         return None
     
-    # Abre o arquivo e carrega o conteúdo JSON
     with open(arquivo, 'r') as f:
         return json.load(f)
 
-# Função para validar um número de telefone usando uma expressão regular
+def formatar_numero_telefone(numero):
+    #Formata o número de telefone removendo caracteres não numéricos e adicionando o prefixo internacional se necessário.
+    numero_formatado = re.sub(r'\D', '', numero)  # Remove tudo exceto dígitos
+    if not numero_formatado.startswith('+'):
+        numero_formatado = '+' + numero_formatado  # Adiciona o prefixo '+' se não estiver presente
+    return numero_formatado
+
 def validar_numero_telefone(numero):
-    # Padrão de regex para um número de telefone internacional
-    padrao = r"^\+\d{1,3}\d{8,15}$"
-    # Verifica se o número corresponde ao padrão
+    #Valida se o número de telefone está no formato internacional correto.
+    numero = formatar_numero_telefone(numero)
+    padrao = r"^\+\d{1,3}\d{8,15}$"  # Padrao: + seguido de 1 a 3 dígitos de código de país e 8 a 15 dígitos numéricos
     if re.match(padrao, numero):
-        return True
+        return True, numero  # Retorna True se o número for válido
     else:
         logging.error(f"Número de telefone inválido: {numero}")
-        return False
+        return False, numero  # Retorna False se o número for inválido
 
-# Função para obter a saudação adequada baseada na hora do dia
 def obter_saudacao():
+    #Retorna a saudação apropriada baseada na hora atual.
     hora_atual = datetime.datetime.now().hour
     if 5 <= hora_atual < 12:
         return "Bom dia"
@@ -43,43 +46,38 @@ def obter_saudacao():
     else:
         return "Boa noite"
 
-# Função para formatar a mensagem a ser enviada
 def formatar_mensagem(nome, mensagem):
+    #Formata a mensagem de WhatsApp com saudação, nome e assinatura.
     saudacao = obter_saudacao()
     mensagem_formatada = f"{saudacao} {nome}!\n\n{mensagem}\n\n*Atenciosamente, Equipe de Relatórios*"
     return mensagem_formatada
 
-# Função para enviar mensagens de WhatsApp
 def enviar_relatorio_whatsapp(destinatarios, delay_segundos):
+    #Envia relatórios por WhatsApp para os destinatários listados.
     for destinatario in destinatarios:
         numero = destinatario['numero']
         nome = destinatario['nome']
         mensagem = destinatario['mensagem']
         
-        # Valida o número de telefone antes de enviar a mensagem
-        if not validar_numero_telefone(numero):
-            continue
-
-        # Formata a mensagem
-        mensagem_formatada = formatar_mensagem(nome, mensagem)
+        valido, numero_formatado = validar_numero_telefone(numero)
+        if not valido:
+            continue  # Pula o destinatário se o número for inválido
         
-        # Espera pelo número de segundos especificado
-        time.sleep(delay_segundos)
+        mensagem_formatada = formatar_mensagem(nome, mensagem)
+        time.sleep(delay_segundos)  # Aguarda o delay configurado antes de enviar a próxima mensagem
         hora_atual = datetime.datetime.now()
         
         try:
-            # Envia a mensagem usando pywhatkit
-            pywhatkit.sendwhatmsg(numero, mensagem_formatada, hora_atual.hour, hora_atual.minute + 1)
+            # Envia a mensagem usando pywhatkit.sendwhatmsg
+            pywhatkit.sendwhatmsg(numero_formatado, mensagem_formatada, hora_atual.hour, hora_atual.minute + 1)
             logging.info(f"Mensagem para {nome} enviada com sucesso às {hora_atual.strftime('%H:%M:%S')}")
         except Exception as e:
             logging.error(f"Erro ao enviar mensagem para {nome}: {e}")
 
-# Execução principal do script
 if __name__ == "__main__":
-    # Carrega as configurações do arquivo JSON
+    # Carrega a configuração do arquivo JSON e inicia o envio de mensagens
     config = carregar_configuracao('config.json')
     if config:
-        # Envia os relatórios via WhatsApp se a configuração foi carregada com sucesso
         enviar_relatorio_whatsapp(config['destinatarios'], config['delay_segundos'])
     else:
         logging.error("Falha ao carregar a configuração.")
