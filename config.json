@@ -1,20 +1,20 @@
 {
   "destinatarios": [
       {
-          "numero": "+55 11 9999-9999",
+          "numero": "+55 81 99695-9564",
           "nome": "João",
           "mensagem": "Aqui está seu relatório diário."
       },
       {
-          "numero": "5511988888888",
+          "numero": "5581996959564",
           "nome": "Maria",
           "mensagem": "Seu relatório diário está pronto."
       },
       {
-          "numero": "+55 (11) 98888-8888",
+          "numero": "+55 (81) 99695-9564",
           "nome": "Carlos",
           "mensagem": "Relatório diário disponível."
       }
   ],
-  "delay_segundos": 2
+  "delay_segundos": 1
 }

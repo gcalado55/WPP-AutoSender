@@ -11,23 +11,26 @@ logging.basicConfig(filename='envio_whatsapp.log', level=logging.INFO,
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 def carregar_configuracao(arquivo):
-    #Carrega as configurações do arquivo JSON especificado.
-    if not os.path.exists(arquivo):
+    # Carrega as configurações do arquivo JSON especificado.
+    caminho_absoluto = os.path.abspath(arquivo)
+    logging.info(f"Tentando carregar configuração a partir de {caminho_absoluto}")
+    
+    if not os.path.exists(caminho_absoluto):
         logging.error("Arquivo de configuração não encontrado.")
         return None
     
-    with open(arquivo, 'r') as f:
+    with open(caminho_absoluto, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def formatar_numero_telefone(numero):
-    #Formata o número de telefone removendo caracteres não numéricos e adicionando o prefixo internacional se necessário.
+    # Formata o número de telefone removendo caracteres não numéricos e adicionando o prefixo internacional se necessário.
     numero_formatado = re.sub(r'\D', '', numero)  # Remove tudo exceto dígitos
     if not numero_formatado.startswith('+'):
         numero_formatado = '+' + numero_formatado  # Adiciona o prefixo '+' se não estiver presente
     return numero_formatado
 
 def validar_numero_telefone(numero):
-    #Valida se o número de telefone está no formato internacional correto.
+    # Valida se o número de telefone está no formato internacional correto.
     numero = formatar_numero_telefone(numero)
     padrao = r"^\+\d{1,3}\d{8,15}$"  # Padrao: + seguido de 1 a 3 dígitos de código de país e 8 a 15 dígitos numéricos
     if re.match(padrao, numero):
@@ -37,7 +40,7 @@ def validar_numero_telefone(numero):
         return False, numero  # Retorna False se o número for inválido
 
 def obter_saudacao():
-    #Retorna a saudação apropriada baseada na hora atual.
+    # Retorna a saudação apropriada baseada na hora atual.
     hora_atual = datetime.datetime.now().hour
     if 5 <= hora_atual < 12:
         return "Bom dia"
@@ -47,13 +50,13 @@ def obter_saudacao():
         return "Boa noite"
 
 def formatar_mensagem(nome, mensagem):
-    #Formata a mensagem de WhatsApp com saudação, nome e assinatura.
+    # Formata a mensagem de WhatsApp com saudação, nome e assinatura.
     saudacao = obter_saudacao()
     mensagem_formatada = f"{saudacao} {nome}!\n\n{mensagem}\n\n*Atenciosamente, Equipe de Relatórios*"
     return mensagem_formatada
 
 def enviar_relatorio_whatsapp(destinatarios, delay_segundos):
-    #Envia relatórios por WhatsApp para os destinatários listados.
+    # Envia relatórios por WhatsApp para os destinatários listados.
     for destinatario in destinatarios:
         numero = destinatario['numero']
         nome = destinatario['nome']

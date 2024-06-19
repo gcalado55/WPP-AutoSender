@@ -1,0 +1,17 @@
+2024-06-19 10:49:27,300:ERROR:Arquivo de configuração não encontrado.
+2024-06-19 10:49:27,300:ERROR:Falha ao carregar a configuração.
+2024-06-19 10:50:59,789:ERROR:Arquivo de configuração não encontrado.
+2024-06-19 10:50:59,789:ERROR:Falha ao carregar a configuração.
+2024-06-19 10:57:43,730:INFO:Tentando carregar configuração a partir de D:\GitHub\Python WPP\config.json
+2024-06-19 10:57:43,731:ERROR:Arquivo de configuração não encontrado.
+2024-06-19 10:57:43,731:ERROR:Falha ao carregar a configuração.
+2024-06-19 10:58:13,842:INFO:Tentando carregar configuração a partir de D:\GitHub\Python WPP\config.json
+2024-06-19 10:59:01,177:INFO:Mensagem para JoÃ£o enviada com sucesso às 10:58:14
+2024-06-19 10:59:02,178:ERROR:Erro ao enviar mensagem para Maria: Invalid Time Format!
+2024-06-19 10:59:03,179:ERROR:Erro ao enviar mensagem para Carlos: Invalid Time Format!
+2024-06-19 11:07:00,057:INFO:Tentando carregar configuração a partir de D:\GitHub\Python WPP\config.json
+2024-06-19 11:08:00,353:INFO:Mensagem para JoÃ£o enviada com sucesso às 11:07:01
+2024-06-19 11:09:00,576:INFO:Mensagem para Maria enviada com sucesso às 11:08:01
+2024-06-19 11:10:00,795:INFO:Mensagem para Carlos enviada com sucesso às 11:09:01
+2024-06-19 11:10:02,605:INFO:Tentando carregar configuração a partir de D:\GitHub\Python WPP\config.json
+2024-06-19 11:11:00,904:INFO:Mensagem para João enviada com sucesso às 11:10:03
