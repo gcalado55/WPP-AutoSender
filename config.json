@@ -1,0 +1,15 @@
+{
+  "destinatarios": [
+      {
+          "numero": "+5511999999999",
+          "nome": "João",
+          "mensagem": "Aqui está seu relatório diário."
+      },
+      {
+          "numero": "+5511988888888",
+          "nome": "Maria",
+          "mensagem": "Seu relatório diário está pronto."
+      }
+  ],
+  "delay_segundos": 10
+}
